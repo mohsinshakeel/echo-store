@@ -6,6 +6,8 @@ import { Card } from "@/components/common";
 import { Product } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { Heart, Star, Leaf } from "lucide-react";
+import { useState } from "react";
+import { customImageLoader, isValidImageUrl } from "@/lib/imageLoader";
 
 interface ProductCardProps {
   product: Product;
@@ -18,6 +20,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   index,
   viewMode = "grid",
 }) => {
+  const [imageError, setImageError] = useState(false);
   if (viewMode === "list") {
     return (
       <motion.div
@@ -35,13 +38,18 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {product.image_url ? (
+                  {product.image_url &&
+                  !imageError &&
+                  isValidImageUrl(product.image_url) ? (
                     <Image
+                      loader={customImageLoader}
                       src={product.image_url}
                       alt={product.title}
                       width={160}
                       height={128}
                       className="w-full h-full object-cover"
+                      onError={() => setImageError(true)}
+                      unoptimized
                     />
                   ) : (
                     <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
@@ -117,13 +125,18 @@ const ProductCard: React.FC<ProductCardProps> = ({
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              {product.image_url ? (
+              {product.image_url &&
+              !imageError &&
+              isValidImageUrl(product.image_url) ? (
                 <Image
+                  loader={customImageLoader}
                   src={product.image_url}
                   alt={product.title}
                   width={400}
                   height={192}
                   className="w-full h-full object-cover"
+                  onError={() => setImageError(true)}
+                  unoptimized
                 />
               ) : (
                 <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">

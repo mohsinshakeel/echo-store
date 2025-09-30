@@ -18,7 +18,13 @@ const corsOptions = {
     "ngrok-skip-browser-warning",
     "Accept",
     "Origin",
-    "X-Requested-With"
+    "X-Requested-With",
+    "Cache-Control"
+  ],
+  exposedHeaders: [
+    "Content-Type",
+    "Content-Length",
+    "Cache-Control"
   ],
 };
 

@@ -17,7 +17,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use("/uploads", express.static("uploads"));
+// Serve static files with proper CORS headers
+app.use("/uploads", (req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Cache-Control", "public, max-age=31536000"); // Cache for 1 year
+  next();
+}, express.static("uploads"));
 
 connectDB();
 app.use(userRouter);
@@ -29,8 +36,6 @@ app.get("/", (req, res) => {
 
 app.listen(port, async () => {
   console.log(`Server running on ${port}`);
-  
-  // Get your endpoint online with ngrok
   try {
     const listener = await ngrok.connect({ 
       addr: port, 

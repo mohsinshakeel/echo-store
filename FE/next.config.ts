@@ -1,30 +1,20 @@
 import type { NextConfig } from "next";
 
+// Get the API URL from environment variable
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const apiUrlObj = new URL(apiUrl || "");
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "8080",
-        pathname: "/uploads/**",
-      },
-      {
-        protocol: "http",
-        hostname: "4ef45ee1c7cf.ngrok-free.app",
-        pathname: "/uploads/**",
-      },
-      {
-        protocol: "https",
-        hostname: "4ef45ee1c7cf.ngrok-free.app",
-        pathname: "/uploads/**",
-      },
-      {
-        protocol: "https",
-        hostname: "a9c5955352d5.ngrok-free.app",
+        protocol: apiUrlObj.protocol.replace(":", "") as "http" | "https",
+        hostname: apiUrlObj.hostname,
+        ...(apiUrlObj.port && { port: apiUrlObj.port }),
         pathname: "/uploads/**",
       },
     ],
+    unoptimized: true,
   },
 };
 

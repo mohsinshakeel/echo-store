@@ -13,6 +13,7 @@ export const create = async (req, res) => {
 
     const newProductId = uuidv4();
 
+    // Always use the current request host for image URLs
     const image_url = `${req.protocol}://${req.get("host")}/uploads/products/${req.file.filename}`;
 
     const newProduct = new productModel({
@@ -67,14 +68,21 @@ export const product_list = async (req, res) => {
     const prevPage =
       page > 1 ? `${baseUrl}?page=${page - 1}&limit=${limit}` : null;
 
-    const cleanProducts = products.map(product => ({
-      product_id: product.product_id,
-      title: product.title,
-      price: product.price,
-      image_url: product.image_url,
-      createdAt: product.createdAt,
-      updatedAt: product.updatedAt
-    }));
+    const cleanProducts = products.map(product => {
+      // Extract filename from the stored image_url
+      const filename = product.image_url.split('/').pop();
+      // Generate new URL with current host
+      const currentImageUrl = `${req.protocol}://${req.get("host")}/uploads/products/${filename}`;
+      
+      return {
+        product_id: product.product_id,
+        title: product.title,
+        price: product.price,
+        image_url: currentImageUrl,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt
+      };
+    });
 
     res.status(200).json({
       message: "List of products retrieved successfully",
@@ -100,11 +108,15 @@ export const get_product_by_id = async (req, res) => {
       return res.status(404).json({ error: "No product found!" });
     }
 
+    // Extract filename from the stored image_url and generate new URL with current host
+    const filename = product.image_url.split('/').pop();
+    const currentImageUrl = `${req.protocol}://${req.get("host")}/uploads/products/${filename}`;
+    
     const cleanProduct = {
       product_id: product.product_id,
       title: product.title,
       price: product.price,
-      image_url: product.image_url,
+      image_url: currentImageUrl,
       createdAt: product.createdAt,
       updatedAt: product.updatedAt
     };
@@ -143,11 +155,15 @@ export const update_product = async (req, res) => {
       return res.status(404).json({ error: "No product exist with this ID!" });
     }
 
+    // Extract filename from the stored image_url and generate new URL with current host
+    const filename = updatedProduct.image_url.split('/').pop();
+    const currentImageUrl = `${req.protocol}://${req.get("host")}/uploads/products/${filename}`;
+    
     const cleanUpdatedProduct = {
       product_id: updatedProduct.product_id,
       title: updatedProduct.title,
       price: updatedProduct.price,
-      image_url: updatedProduct.image_url,
+      image_url: currentImageUrl,
       createdAt: updatedProduct.createdAt,
       updatedAt: updatedProduct.updatedAt
     };
@@ -169,11 +185,15 @@ export const delete_product = async (req, res) => {
       return res.status(404).json({ error: "No product exist with this ID!" });
     }
 
+    // Extract filename from the stored image_url and generate new URL with current host
+    const filename = deletedproduct.image_url.split('/').pop();
+    const currentImageUrl = `${req.protocol}://${req.get("host")}/uploads/products/${filename}`;
+    
     const cleanDeletedProduct = {
       product_id: deletedproduct.product_id,
       title: deletedproduct.title,
       price: deletedproduct.price,
-      image_url: deletedproduct.image_url,
+      image_url: currentImageUrl,
       createdAt: deletedproduct.createdAt,
       updatedAt: deletedproduct.updatedAt
     };
