@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Navigation } from "@/components/common";
 import HeroSection from "@/components/sections/HeroSection";
@@ -21,21 +21,32 @@ export default function Home() {
   } = useProducts();
   const router = useRouter();
   const hasFetchedProducts = useRef(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Fix hydration mismatch by ensuring client-side rendering
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (isClient && !isLoading && !isAuthenticated) {
       router.push("/login");
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isClient, isAuthenticated, isLoading, router]);
 
   useEffect(() => {
-    if (isAuthenticated && !productsLoading && !hasFetchedProducts.current) {
+    if (
+      isClient &&
+      isAuthenticated &&
+      !productsLoading &&
+      !hasFetchedProducts.current
+    ) {
       hasFetchedProducts.current = true;
       // Always clear products and fetch exactly 6 for home page
       clearProducts();
       getProducts(6, 1);
     }
-  }, [isAuthenticated, getProducts, clearProducts, productsLoading]);
+  }, [isClient, isAuthenticated, getProducts, clearProducts, productsLoading]);
 
   // Reset the fetch flag when component unmounts
   useEffect(() => {
@@ -44,7 +55,8 @@ export default function Home() {
     };
   }, []);
 
-  if (isLoading) {
+  // Show loading state during hydration
+  if (!isClient || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

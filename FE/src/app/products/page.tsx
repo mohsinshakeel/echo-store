@@ -23,20 +23,32 @@ export default function ProductsPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [filter, setFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isClient, setIsClient] = useState(false);
+
+  // Fix hydration mismatch by ensuring client-side rendering
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (isClient && !isLoading && !isAuthenticated) {
       router.push("/login");
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isClient, isAuthenticated, isLoading, router]);
 
   useEffect(() => {
-    if (isAuthenticated && !productsLoading && !hasFetchedProducts.current) {
+    if (
+      isClient &&
+      isAuthenticated &&
+      !productsLoading &&
+      !hasFetchedProducts.current
+    ) {
       hasFetchedProducts.current = true;
       clearProducts();
       getProducts(10, currentPage); // Set limit to 10 and current page
     }
   }, [
+    isClient,
     isAuthenticated,
     productsLoading,
     getProducts,
@@ -67,7 +79,8 @@ export default function ProductsPage() {
     hasFetchedProducts.current = false; // Reset flag to allow new fetch
   };
 
-  if (isLoading) {
+  // Show loading state during hydration
+  if (!isClient || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -101,14 +114,14 @@ export default function ProductsPage() {
           {/* Filters and View Controls */}
           <div className="flex flex-col gap-4 mb-8">
             {/* Filters Row */}
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               <div className="flex items-center gap-2">
                 <Filter className="w-5 h-5 text-gray-500" />
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Filter:
                 </span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {[
                   { value: "all", label: "All Products" },
                   { value: "under-30", label: "Under $30" },
@@ -118,7 +131,7 @@ export default function ProductsPage() {
                   <button
                     key={option.value}
                     onClick={() => setFilter(option.value)}
-                    className={`px-3 py-1 rounded-full text-sm transition-all duration-300 ${
+                    className={`px-3 py-1 rounded-full text-sm transition-all duration-300 whitespace-nowrap ${
                       filter === option.value
                         ? "bg-green-500 text-white"
                         : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20"
@@ -131,11 +144,15 @@ export default function ProductsPage() {
             </div>
 
             {/* Count and View Controls Row */}
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
               {/* Products Count */}
               <div className="text-sm text-gray-500 dark:text-gray-400">
-                Showing {filteredProducts.length} of {totalProducts} products
-                (Page {currentPage} of {reduxTotalPages})
+                <span className="block sm:inline">
+                  Showing {filteredProducts.length} of {totalProducts} products
+                </span>
+                <span className="block sm:inline sm:ml-1">
+                  (Page {currentPage} of {reduxTotalPages})
+                </span>
               </div>
 
               {/* View Mode Toggle */}

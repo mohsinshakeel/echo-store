@@ -118,7 +118,6 @@ export const checkAuth = createAsyncThunk(
     try {
       const state = getState() as { auth: AuthState };
       if (state.auth.isLoading || state.auth.isRefreshing) {
-        // If already checking auth or refreshing, don't start another check
         throw new Error("Auth check already in progress");
       }
 
@@ -127,14 +126,11 @@ export const checkAuth = createAsyncThunk(
         throw new Error("No tokens available");
       }
 
-      // Check if access token is expired by trying to decode it
       try {
         const tokenPayload = JSON.parse(atob(access_token.split(".")[1]));
         const currentTime = Date.now() / 1000;
 
-        // If token is still valid (not expired), just return the stored user data
         if (tokenPayload.exp > currentTime) {
-          // Token is still valid, no need to refresh
           return {
             access_token,
             refresh_token,

@@ -5,6 +5,7 @@ import connectDB from "./configuration/db_connection.js";
 import corsMiddleware from "./configuration/cors.js";
 import userRouter from "./router/userRouter.js";
 import productRouter from "./router/productRouter.js";
+import ngrok from "@ngrok/ngrok";
 
 dotenv.config();
 
@@ -26,6 +27,17 @@ app.get("/", (req, res) => {
   res.end("server created ");
 });
 
-app.listen(port, () => {
-  console.log(`Sever running on ${port}`);
+app.listen(port, async () => {
+  console.log(`Server running on ${port}`);
+  
+  // Get your endpoint online with ngrok
+  try {
+    const listener = await ngrok.connect({ 
+      addr: port, 
+      authtoken_from_env: true 
+    });
+    console.log(`Ingress established at: ${listener.url()}`);
+  } catch (error) {
+    console.error('Failed to establish ngrok tunnel:', error);
+  }
 });

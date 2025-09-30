@@ -1,15 +1,14 @@
 import api from "./api";
 import axios from "axios";
 
-// Create a separate axios instance for refresh calls to avoid circular dependency
 const refreshApi = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {
     "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "true",
   },
 });
 
-// Flag to prevent multiple simultaneous refresh calls
 let isRefreshing = false;
 
 export interface SignupData {
@@ -107,7 +106,15 @@ export const authService = {
 
   getUser: () => {
     const userData = localStorage.getItem("user_data");
-    return userData ? JSON.parse(userData) : null;
+    if (!userData || userData === "undefined" || userData === "null") {
+      return null;
+    }
+    try {
+      return JSON.parse(userData);
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+      return null;
+    }
   },
 
   clearAuth: () => {
