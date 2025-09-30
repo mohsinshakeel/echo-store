@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import cookieParser from "cookie-parser";
 import connectDB from "./configuration/db_connection.js";
+import "./configuration/redis_connection.js"; // Initialize Redis connection
 import corsMiddleware from "./configuration/cors.js";
 import userRouter from "./router/userRouter.js";
 import productRouter from "./router/productRouter.js";
@@ -10,7 +11,7 @@ import ngrok from "@ngrok/ngrok";
 dotenv.config();
 
 const app = express();
-const port = process.env.PUBLIC_PORT;
+const port = process.env.PORT || 3000;
 
 app.use(corsMiddleware())
 app.use(express.json());

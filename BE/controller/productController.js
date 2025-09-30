@@ -1,6 +1,13 @@
 
 import productModel from "../Model/productModel.js";
 import { v4 as uuidv4 } from 'uuid';
+import { 
+  cacheProductList, 
+  getCachedProductList, 
+  cacheProductDetail, 
+  getCachedProductDetail, 
+  invalidateProductCache 
+} from "../service/redisService.js";
 
 
 export const create = async (req, res) => {
@@ -37,6 +44,8 @@ export const create = async (req, res) => {
       updatedAt: savedProduct.updatedAt
     };
 
+    await invalidateProductCache();
+
     res.status(201).json(responseProduct);
   } catch (err) {
     console.error("Product creation error:", err);
@@ -54,6 +63,39 @@ export const product_list = async (req, res) => {
   }`;
 
   try {
+    const cachedData = await getCachedProductList(page, limit);
+    if (cachedData) {
+      const { products: cachedProducts, totalCount } = cachedData;
+      
+      const totalPages = Math.ceil(totalCount / limit);
+      const nextPage = page < totalPages ? `${baseUrl}?page=${page + 1}&limit=${limit}` : null;
+      const prevPage = page > 1 ? `${baseUrl}?page=${page - 1}&limit=${limit}` : null;
+
+      const cleanProducts = cachedProducts.map(product => {
+        const filename = product.image_url.split('/').pop();
+        const currentImageUrl = `${req.protocol}://${req.get("host")}/uploads/products/${filename}`;
+        
+        return {
+          product_id: product.product_id,
+          title: product.title,
+          price: product.price,
+          image_url: currentImageUrl,
+          createdAt: product.createdAt,
+          updatedAt: product.updatedAt
+        };
+      });
+
+      return res.status(200).json({
+        message: "List of products retrieved successfully (cached)",
+        page,
+        limit,
+        totalProduct: totalCount,
+        totalPages,
+        nextPage,
+        prevPage,
+        products: cleanProducts,
+      });
+    }
     const totalProduct = await productModel.countDocuments();
     const products = await productModel.find().skip(skip).limit(limit);
 
@@ -84,6 +126,8 @@ export const product_list = async (req, res) => {
       };
     });
 
+    await cacheProductList(page, limit, products, totalProduct);
+
     res.status(200).json({
       message: "List of products retrieved successfully",
       page,
@@ -102,11 +146,32 @@ export const product_list = async (req, res) => {
 export const get_product_by_id = async (req, res) => {
   try {
     const { product_id } = req.params;
+    const cachedProduct = await getCachedProductDetail(product_id);
+    if (cachedProduct) {
+      const filename = cachedProduct.image_url.split('/').pop();
+      const currentImageUrl = `${req.protocol}://${req.get("host")}/uploads/products/${filename}`;
+      
+      const cleanProduct = {
+        product_id: cachedProduct.product_id,
+        title: cachedProduct.title,
+        price: cachedProduct.price,
+        image_url: currentImageUrl,
+        createdAt: cachedProduct.createdAt,
+        updatedAt: cachedProduct.updatedAt
+      };
+
+      return res.status(200).json({
+        message: "product retrieved successfully (cached)",
+        product: cleanProduct,
+      });
+    }
     const product = await productModel.findOne({ product_id });
 
     if (!product) {
       return res.status(404).json({ error: "No product found!" });
     }
+
+    await cacheProductDetail(product_id, product);
 
     // Extract filename from the stored image_url and generate new URL with current host
     const filename = product.image_url.split('/').pop();
@@ -168,6 +233,8 @@ export const update_product = async (req, res) => {
       updatedAt: updatedProduct.updatedAt
     };
 
+    await invalidateProductCache(product_id);
+
     res.status(200).json({
       message: "Product updated successfully",
       product: cleanUpdatedProduct,
@@ -197,6 +264,7 @@ export const delete_product = async (req, res) => {
       createdAt: deletedproduct.createdAt,
       updatedAt: deletedproduct.updatedAt
     };
+    await invalidateProductCache(product_id);
 
     res.status(200).json({
       message: "Product Parmanently deleted successfully",

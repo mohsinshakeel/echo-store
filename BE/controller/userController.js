@@ -1,5 +1,5 @@
 import userModel from "../Model/userModel.js";
-import { setUser, setrefresh, getrefresh } from "../service/auth.js";
+import { setUser, setrefresh, getrefresh, blacklistToken } from "../service/auth.js";
 
 export const signup = async (req, res) => {
   try {
@@ -88,6 +88,26 @@ export const refresh = async (req, res) => {
       access_token,
       refresh_token: new_refresh_token
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    const token = req.headers["authorization"]?.split(" ")[1];
+    
+    if (!token) {
+      return res.status(400).json({ error: "No token provided" });
+    }
+
+    const success = await blacklistToken(token);
+    
+    if (success) {
+      res.status(200).json({ message: "Logged out successfully" });
+    } else {
+      res.status(400).json({ error: "Failed to logout" });
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

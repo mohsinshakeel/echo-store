@@ -1,8 +1,10 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { validateToken, isTokenBlacklisted } from "../service/auth.js";
 
 dotenv.config();
-const verifyToken = (req, res, next) => {
+
+const verifyToken = async (req, res, next) => {
   let token;
 
   let authHeader = req.headers["authorization"];
@@ -16,8 +18,27 @@ const verifyToken = (req, res, next) => {
   }
 
   try {
-    const decode = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    req.user = decode;
+    // Check if token is blacklisted
+    const isBlacklisted = await isTokenBlacklisted(token);
+    if (isBlacklisted) {
+      return res.status(401).json({ 
+        error: "Token has been revoked",
+        code: "TOKEN_REVOKED",
+        message: "Token has been revoked"
+      });
+    }
+
+    // Validate token using Redis
+    const decoded = await validateToken(token);
+    if (!decoded) {
+      return res.status(401).json({ 
+        error: "Invalid or expired token",
+        code: "INVALID_TOKEN",
+        message: "Invalid or expired token"
+      });
+    }
+
+    req.user = decoded;
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {
