@@ -1,25 +1,30 @@
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import { Navigation } from '@/components/common';
-import HeroSection from '@/components/sections/HeroSection';
-import FeaturesSection from '@/components/sections/FeaturesSection';
-import ProductSection from '@/components/sections/ProductSection';
-import ContactForm from '@/components/sections/ContactForm';
-import Footer from '@/components/sections/Footer';
-import { useAuth } from '@/lib/auth-context';
-import { useProducts } from '@/hooks/useProducts';
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { Navigation } from "@/components/common";
+import HeroSection from "@/components/sections/HeroSection";
+import FeaturesSection from "@/components/sections/FeaturesSection";
+import ProductSection from "@/components/sections/ProductSection";
+import ContactForm from "@/components/sections/ContactForm";
+import Footer from "@/components/sections/Footer";
+import { useAuth } from "@/lib/auth-context";
+import { useProducts } from "@/hooks/useProducts";
 
 export default function Home() {
   const { isAuthenticated, isLoading } = useAuth();
-  const { products, getProducts, clearProducts, isLoading: productsLoading } = useProducts();
+  const {
+    products,
+    getProducts,
+    clearProducts,
+    isLoading: productsLoading,
+  } = useProducts();
   const router = useRouter();
   const hasFetchedProducts = useRef(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [isAuthenticated, isLoading, router]);
 
@@ -51,7 +56,7 @@ export default function Home() {
   }
 
   if (!isAuthenticated) {
-    return null; 
+    return null;
   }
 
   return (

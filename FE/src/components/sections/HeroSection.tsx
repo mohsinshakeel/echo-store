@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Button, Container, AnimatedText } from '@/components/common';
-import { Droplets, Leaf, Recycle, Sparkles } from 'lucide-react';
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Button, Container, AnimatedText } from "@/components/common";
+import { Droplets, Leaf, Recycle, Sparkles } from "lucide-react";
 
 const HeroSection = () => {
   const { scrollY } = useScroll();
@@ -12,10 +12,7 @@ const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-green-50 via-blue-50 to-emerald-50 dark:from-gray-900 dark:via-green-900 dark:to-emerald-900">
       {/* Background Elements */}
-      <motion.div
-        style={{ y }}
-        className="absolute inset-0 z-0"
-      >
+      <motion.div style={{ y }} className="absolute inset-0 z-0">
         <div className="absolute top-20 left-10 w-20 h-20 bg-green-200 rounded-full opacity-30 animate-pulse" />
         <div className="absolute top-40 right-20 w-16 h-16 bg-blue-200 rounded-full opacity-40 animate-bounce" />
         <div className="absolute bottom-40 left-20 w-24 h-24 bg-emerald-200 rounded-full opacity-25 animate-pulse" />
@@ -31,62 +28,62 @@ const HeroSection = () => {
       >
         <motion.div
           className="absolute top-32 left-16 text-green-400"
-          animate={{ 
+          animate={{
             y: [0, -20, 0],
-            rotate: [0, 5, 0]
+            rotate: [0, 5, 0],
           }}
-          transition={{ 
+          transition={{
             duration: 4,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: "easeInOut",
           }}
         >
           <Droplets size={32} />
         </motion.div>
-        
+
         <motion.div
           className="absolute top-48 right-24 text-emerald-400"
-          animate={{ 
+          animate={{
             y: [0, 15, 0],
-            rotate: [0, -5, 0]
+            rotate: [0, -5, 0],
           }}
-          transition={{ 
+          transition={{
             duration: 3,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 1
+            delay: 1,
           }}
         >
           <Leaf size={28} />
         </motion.div>
-        
+
         <motion.div
           className="absolute bottom-32 left-24 text-blue-400"
-          animate={{ 
+          animate={{
             y: [0, -10, 0],
-            rotate: [0, 10, 0]
+            rotate: [0, 10, 0],
           }}
-          transition={{ 
+          transition={{
             duration: 5,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 2
+            delay: 2,
           }}
         >
           <Recycle size={24} />
         </motion.div>
-        
+
         <motion.div
           className="absolute bottom-48 right-16 text-teal-400"
-          animate={{ 
+          animate={{
             y: [0, 20, 0],
-            rotate: [0, -10, 0]
+            rotate: [0, -10, 0],
           }}
-          transition={{ 
+          transition={{
             duration: 4,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 0.5
+            delay: 0.5,
           }}
         >
           <Sparkles size={20} />
@@ -105,11 +102,11 @@ const HeroSection = () => {
             className="mb-8"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 200, 
+            transition={{
+              type: "spring",
+              stiffness: 200,
               damping: 15,
-              delay: 0.5 
+              delay: 0.5,
             }}
           >
             <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full mb-6">
@@ -129,8 +126,9 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.2 }}
           >
-            Sustainable hydration for a better planet. Made from 100% recycled materials, 
-            our eco-friendly water bottles combine style, durability, and environmental responsibility.
+            Sustainable hydration for a better planet. Made from 100% recycled
+            materials, our eco-friendly water bottles combine style, durability,
+            and environmental responsibility.
           </motion.p>
 
           <motion.div
@@ -174,9 +172,7 @@ const HeroSection = () => {
               <div className="text-3xl md:text-4xl font-bold text-emerald-600 dark:text-emerald-400 mb-2">
                 5 Years
               </div>
-              <div className="text-gray-600 dark:text-gray-300">
-                Warranty
-              </div>
+              <div className="text-gray-600 dark:text-gray-300">Warranty</div>
             </div>
           </motion.div>
         </motion.div>

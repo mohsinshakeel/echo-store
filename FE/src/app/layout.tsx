@@ -16,7 +16,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "EcoBottle - Sustainable Water Bottles for a Better Planet",
-  description: "Discover our collection of eco-friendly water bottles made from 100% recycled materials. Join the sustainable hydration revolution with premium, leak-proof, and environmentally responsible bottles.",
+  description:
+    "Discover our collection of eco-friendly water bottles made from 100% recycled materials. Join the sustainable hydration revolution with premium, leak-proof, and environmentally responsible bottles.",
 };
 
 export default function RootLayout({
@@ -30,9 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ReduxProvider>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
+          <AuthProvider>{children}</AuthProvider>
         </ReduxProvider>
       </body>
     </html>

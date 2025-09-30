@@ -1,15 +1,23 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Button, Card, Container } from '@/components/common';
-import { signupFormSchema, SignupFormData } from '@/lib/validations';
-import { useAuth } from '@/lib/auth-context';
-import { Mail, Lock, Eye, EyeOff, Droplets, User, CheckCircle } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button, Card, Container } from "@/components/common";
+import { signupFormSchema, SignupFormData } from "@/lib/validations";
+import { useAuth } from "@/lib/auth-context";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  Droplets,
+  User,
+  CheckCircle,
+} from "lucide-react";
 
 const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,22 +31,21 @@ const SignupPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
     reset,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupFormSchema),
-    mode: 'onChange',
+    mode: "onChange",
   });
 
   // Clear form on mount to prevent any browser autofill
   useEffect(() => {
     reset({
-      firstName: '',
-      lastName: '',
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
+      firstName: "",
+      lastName: "",
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
       agreeToTerms: false,
     });
   }, [reset]);
@@ -46,7 +53,7 @@ const SignupPage = () => {
   const onSubmit = async (data: SignupFormData) => {
     setIsSubmitting(true);
     clearError();
-    
+
     try {
       const success = await signup({
         firstName: data.firstName,
@@ -55,15 +62,15 @@ const SignupPage = () => {
         email: data.email,
         password: data.password,
       });
-      
+
       if (success) {
         setSignupSuccess(true);
         setTimeout(() => {
-          router.push('/');
+          router.push("/");
         }, 2000);
       }
     } catch (error) {
-      console.error('Signup error:', error);
+      console.error("Signup error:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -82,7 +89,7 @@ const SignupPage = () => {
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
               >
                 <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
               </motion.div>
@@ -95,8 +102,8 @@ const SignupPage = () => {
               <motion.div
                 className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2"
                 initial={{ width: 0 }}
-                animate={{ width: '100%' }}
-                transition={{ duration: 2, ease: 'easeInOut' }}
+                animate={{ width: "100%" }}
+                transition={{ duration: 2, ease: "easeInOut" }}
               >
                 <div className="bg-green-500 h-2 rounded-full" />
               </motion.div>
@@ -119,12 +126,22 @@ const SignupPage = () => {
         <motion.div
           className="absolute top-40 right-20 w-16 h-16 bg-blue-200 rounded-full opacity-40"
           animate={{ y: [0, 20, 0] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
         />
         <motion.div
           className="absolute bottom-40 left-20 w-24 h-24 bg-emerald-200 rounded-full opacity-25"
           animate={{ y: [0, -15, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
         />
       </div>
 
@@ -134,7 +151,6 @@ const SignupPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-
           <Card className="p-8">
             {/* Header */}
             <motion.div
@@ -146,7 +162,7 @@ const SignupPage = () => {
               <motion.div
                 className="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full mb-4"
                 whileHover={{ scale: 1.1, rotate: 5 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
                 <Droplets className="w-8 h-8 text-green-600 dark:text-green-400" />
               </motion.div>
@@ -172,7 +188,7 @@ const SignupPage = () => {
                   <User className="text-gray-400 w-5 h-5" />
                   <div className="relative flex-1">
                     <input
-                      {...register('firstName')}
+                      {...register("firstName")}
                       placeholder="First name"
                       autoComplete="off"
                       autoCorrect="off"
@@ -181,9 +197,10 @@ const SignupPage = () => {
                       className={`
                         w-full px-4 py-3 border rounded-lg transition-all duration-300
                         focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
-                        ${errors.firstName?.message 
-                          ? 'border-red-500 bg-red-50 dark:bg-red-900/20' 
-                          : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'
+                        ${
+                          errors.firstName?.message
+                            ? "border-red-500 bg-red-50 dark:bg-red-900/20"
+                            : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
                         }
                         dark:text-white placeholder-gray-500 dark:placeholder-gray-400
                       `}
@@ -194,7 +211,7 @@ const SignupPage = () => {
                   <User className="text-gray-400 w-5 h-5" />
                   <div className="relative flex-1">
                     <input
-                      {...register('lastName')}
+                      {...register("lastName")}
                       placeholder="Last name"
                       autoComplete="off"
                       autoCorrect="off"
@@ -203,9 +220,10 @@ const SignupPage = () => {
                       className={`
                         w-full px-4 py-3 border rounded-lg transition-all duration-300
                         focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
-                        ${errors.lastName?.message 
-                          ? 'border-red-500 bg-red-50 dark:bg-red-900/20' 
-                          : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'
+                        ${
+                          errors.lastName?.message
+                            ? "border-red-500 bg-red-50 dark:bg-red-900/20"
+                            : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
                         }
                         dark:text-white placeholder-gray-500 dark:placeholder-gray-400
                       `}
@@ -242,7 +260,7 @@ const SignupPage = () => {
                 <User className="text-gray-400 w-5 h-5" />
                 <div className="relative flex-1">
                   <input
-                    {...register('username')}
+                    {...register("username")}
                     placeholder="Choose a username"
                     autoComplete="off"
                     autoCorrect="off"
@@ -251,9 +269,10 @@ const SignupPage = () => {
                     className={`
                       w-full px-4 py-3 border rounded-lg transition-all duration-300
                       focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
-                      ${errors.username?.message 
-                        ? 'border-red-500 bg-red-50 dark:bg-red-900/20' 
-                        : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'
+                      ${
+                        errors.username?.message
+                          ? "border-red-500 bg-red-50 dark:bg-red-900/20"
+                          : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
                       }
                       dark:text-white placeholder-gray-500 dark:placeholder-gray-400
                     `}
@@ -276,7 +295,7 @@ const SignupPage = () => {
                 <Mail className="text-gray-400 w-5 h-5" />
                 <div className="relative flex-1">
                   <input
-                    {...register('email')}
+                    {...register("email")}
                     type="email"
                     placeholder="Enter your email"
                     autoComplete="off"
@@ -286,9 +305,10 @@ const SignupPage = () => {
                     className={`
                       w-full px-4 py-3 border rounded-lg transition-all duration-300
                       focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
-                      ${errors.email?.message 
-                        ? 'border-red-500 bg-red-50 dark:bg-red-900/20' 
-                        : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'
+                      ${
+                        errors.email?.message
+                          ? "border-red-500 bg-red-50 dark:bg-red-900/20"
+                          : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
                       }
                       dark:text-white placeholder-gray-500 dark:placeholder-gray-400
                     `}
@@ -311,8 +331,8 @@ const SignupPage = () => {
                 <Lock className="text-gray-400 w-5 h-5" />
                 <div className="relative flex-1">
                   <input
-                    {...register('password')}
-                    type={showPassword ? 'text' : 'password'}
+                    {...register("password")}
+                    type={showPassword ? "text" : "password"}
                     placeholder="Create a password"
                     autoComplete="new-password"
                     autoCorrect="off"
@@ -321,9 +341,10 @@ const SignupPage = () => {
                     className={`
                       w-full px-4 py-3 pr-12 border rounded-lg transition-all duration-300
                       focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
-                      ${errors.password?.message 
-                        ? 'border-red-500 bg-red-50 dark:bg-red-900/20' 
-                        : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'
+                      ${
+                        errors.password?.message
+                          ? "border-red-500 bg-red-50 dark:bg-red-900/20"
+                          : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
                       }
                       dark:text-white placeholder-gray-500 dark:placeholder-gray-400
                     `}
@@ -333,7 +354,11 @@ const SignupPage = () => {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -348,14 +373,13 @@ const SignupPage = () => {
                 </motion.p>
               )}
 
-
               {/* Confirm Password Field */}
               <div className="flex items-center gap-3">
                 <Lock className="text-gray-400 w-5 h-5" />
                 <div className="relative flex-1">
                   <input
-                    {...register('confirmPassword')}
-                    type={showConfirmPassword ? 'text' : 'password'}
+                    {...register("confirmPassword")}
+                    type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm your password"
                     autoComplete="new-password"
                     autoCorrect="off"
@@ -364,9 +388,10 @@ const SignupPage = () => {
                     className={`
                       w-full px-4 py-3 pr-12 border rounded-lg transition-all duration-300
                       focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
-                      ${errors.confirmPassword?.message 
-                        ? 'border-red-500 bg-red-50 dark:bg-red-900/20' 
-                        : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'
+                      ${
+                        errors.confirmPassword?.message
+                          ? "border-red-500 bg-red-50 dark:bg-red-900/20"
+                          : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
                       }
                       dark:text-white placeholder-gray-500 dark:placeholder-gray-400
                     `}
@@ -376,7 +401,11 @@ const SignupPage = () => {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                   >
-                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -395,25 +424,32 @@ const SignupPage = () => {
               <div className="space-y-4">
                 <label className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-300">
                   <input
-                    {...register('agreeToTerms')}
+                    {...register("agreeToTerms")}
                     type="checkbox"
                     className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mt-0.5"
                   />
                   <span>
-                    I agree to the{' '}
-                    <Link href="/terms" className="text-green-600 dark:text-green-400 hover:underline">
+                    I agree to the{" "}
+                    <Link
+                      href="/terms"
+                      className="text-green-600 dark:text-green-400 hover:underline"
+                    >
                       Terms of Service
-                    </Link>{' '}
-                    and{' '}
-                    <Link href="/privacy" className="text-green-600 dark:text-green-400 hover:underline">
+                    </Link>{" "}
+                    and{" "}
+                    <Link
+                      href="/privacy"
+                      className="text-green-600 dark:text-green-400 hover:underline"
+                    >
                       Privacy Policy
                     </Link>
                   </span>
                 </label>
                 {errors.agreeToTerms && (
-                  <p className="text-red-500 text-sm">{errors.agreeToTerms.message}</p>
+                  <p className="text-red-500 text-sm">
+                    {errors.agreeToTerms.message}
+                  </p>
                 )}
-
               </div>
 
               {/* Error Message */}
@@ -423,7 +459,9 @@ const SignupPage = () => {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
-                  <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+                  <p className="text-red-600 dark:text-red-400 text-sm">
+                    {error}
+                  </p>
                 </motion.div>
               )}
 
@@ -434,7 +472,7 @@ const SignupPage = () => {
                 className="w-full"
                 disabled={isSubmitting}
               >
-                      {isSubmitting ? 'Creating Account...' : 'Create Account'}
+                {isSubmitting ? "Creating Account..." : "Create Account"}
               </Button>
             </motion.form>
 
@@ -445,7 +483,7 @@ const SignupPage = () => {
               transition={{ duration: 0.5, delay: 0.8 }}
             >
               <p className="text-gray-600 dark:text-gray-300">
-                Already have an account?{' '}
+                Already have an account?{" "}
                 <Link
                   href="/login"
                   className="text-green-600 dark:text-green-400 hover:underline font-medium"

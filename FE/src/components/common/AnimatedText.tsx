@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 interface AnimatedTextProps {
   text: string;
@@ -11,11 +11,11 @@ interface AnimatedTextProps {
 
 const AnimatedText: React.FC<AnimatedTextProps> = ({
   text,
-  className = '',
+  className = "",
   delay = 0,
   duration = 0.5,
 }) => {
-  const words = text.split(' ');
+  const words = text.split(" ");
 
   return (
     <motion.div

@@ -1,11 +1,11 @@
-import api from './api';
-import axios from 'axios';
+import api from "./api";
+import axios from "axios";
 
 // Create a separate axios instance for refresh calls to avoid circular dependency
 const refreshApi = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: "http://localhost:8080",
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -35,42 +35,40 @@ export interface AuthResponse {
   };
 }
 
-
 export const authService = {
-
   signup: async (data: SignupData): Promise<AuthResponse> => {
-    const response = await api.post('/signup', data);
+    const response = await api.post("/signup", data);
     return response.data;
   },
-
 
   login: async (data: LoginData): Promise<AuthResponse> => {
-    const response = await api.post('/login', data);
+    const response = await api.post("/login", data);
     return response.data;
   },
-
 
   refresh: async (): Promise<AuthResponse> => {
     if (isRefreshing) {
-      throw new Error('Refresh already in progress');
+      throw new Error("Refresh already in progress");
     }
 
-    const refresh_token = localStorage.getItem('refresh_token');
+    const refresh_token = localStorage.getItem("refresh_token");
     if (!refresh_token) {
-      throw new Error('No refresh token available');
+      throw new Error("No refresh token available");
     }
 
     isRefreshing = true;
     try {
-      const response = await refreshApi.post('/refresh', { 'refresh-token': refresh_token });
+      const response = await refreshApi.post("/refresh", {
+        "refresh-token": refresh_token,
+      });
       const data = response.data;
-      
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem('refresh_token', data.refresh_token);
+
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
       if (data.user) {
-        localStorage.setItem('user_data', JSON.stringify(data.user));
+        localStorage.setItem("user_data", JSON.stringify(data.user));
       }
-      
+
       return data;
     } catch (error) {
       authService.clearAuth();
@@ -80,42 +78,41 @@ export const authService = {
     }
   },
 
-
   logout: () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user_data');
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user_data");
   },
-
 
   getTokens: () => {
     return {
-      access_token: localStorage.getItem('access_token'),
-      refresh_token: localStorage.getItem('refresh_token'),
+      access_token: localStorage.getItem("access_token"),
+      refresh_token: localStorage.getItem("refresh_token"),
     };
   },
 
-  
   setTokens: (access_token: string, refresh_token: string) => {
-    localStorage.setItem('access_token', access_token);
-    localStorage.setItem('refresh_token', refresh_token);
+    localStorage.setItem("access_token", access_token);
+    localStorage.setItem("refresh_token", refresh_token);
   },
 
-
-  setUser: (user: any) => {
-    localStorage.setItem('user_data', JSON.stringify(user));
+  setUser: (user: {
+    id: string;
+    name: string;
+    username: string;
+    email: string;
+  }) => {
+    localStorage.setItem("user_data", JSON.stringify(user));
   },
-
 
   getUser: () => {
-    const userData = localStorage.getItem('user_data');
+    const userData = localStorage.getItem("user_data");
     return userData ? JSON.parse(userData) : null;
   },
 
-
   clearAuth: () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user_data');
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user_data");
   },
 };

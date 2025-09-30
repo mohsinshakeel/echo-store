@@ -1,4 +1,4 @@
-import api from './api';
+import api from "./api";
 
 export interface Product {
   id: string;
@@ -22,16 +22,15 @@ export interface UpdateProductData {
 }
 
 export const productService = {
-
   createProduct: async (data: CreateProductData): Promise<Product> => {
     const formData = new FormData();
-    formData.append('title', data.title);
-    formData.append('price', data.price);
-    formData.append('image_url', data.image_url);
-    
-    const response = await api.post('/product/create', formData, {
+    formData.append("title", data.title);
+    formData.append("price", data.price);
+    formData.append("image_url", data.image_url);
+
+    const response = await api.post("/product/create", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
     return response.data;
@@ -42,43 +41,59 @@ export const productService = {
     return response.data;
   },
 
-  getProducts: async (limit?: number, page?: number): Promise<{ products: Product[]; totalPages: number; currentPage: number; totalProducts: number }> => {
-    const params: any = {};
+  getProducts: async (
+    limit?: number,
+    page?: number,
+  ): Promise<{
+    products: Product[];
+    totalPages: number;
+    currentPage: number;
+    totalProducts: number;
+  }> => {
+    const params: Record<string, number> = {};
     if (limit) params.limit = limit;
     if (page) params.page = page;
-    
-    const response = await api.get('/product/list', { params });
-    
-    const transformedProducts = response.data.products.map((product: any) => ({
-      id: product.product_id,
-      title: product.title.replace(/"/g, ''),
-      price: product.price.replace(/"/g, ''),
-      image_url: product.image_url,
-      created_at: product.createdAt,
-      updated_at: product.updatedAt,
-    }));
 
-    const totalProducts = response.data.totalProduct || transformedProducts.length;
-    const totalPages = response.data.totalPages || (limit ? Math.ceil(totalProducts / limit) : 1);
+    const response = await api.get("/product/list", { params });
+
+    const transformedProducts = response.data.products.map(
+      (product: Record<string, unknown>) => ({
+        id: product.product_id as string,
+        title: (product.title as string).replace(/"/g, ""),
+        price: (product.price as string).replace(/"/g, ""),
+        image_url: product.image_url as string,
+        created_at: product.createdAt as string,
+        updated_at: product.updatedAt as string,
+      }),
+    );
+
+    const totalProducts =
+      response.data.totalProduct || transformedProducts.length;
+    const totalPages =
+      response.data.totalPages ||
+      (limit ? Math.ceil(totalProducts / limit) : 1);
     const currentPage = response.data.page || page || 1;
 
     return {
       products: transformedProducts,
       totalPages,
       currentPage,
-      totalProducts
+      totalProducts,
     };
   },
 
-  updateProduct: async (id: string, data: UpdateProductData): Promise<Product> => {
+  updateProduct: async (
+    id: string,
+    data: UpdateProductData,
+  ): Promise<Product> => {
     const formData = new FormData();
-    if (data.title) formData.append('title', data.title);
-    if (data.price) formData.append('price', data.price);
-    if (data.image_url) formData.append('image_url', data.image_url);
-    
+    if (data.title) formData.append("title", data.title);
+    if (data.price) formData.append("price", data.price);
+    if (data.image_url) formData.append("image_url", data.image_url);
+
     const response = await api.put(`/product/update/${id}`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
     return response.data;

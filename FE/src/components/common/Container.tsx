@@ -1,26 +1,26 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 interface ContainerProps {
   children: React.ReactNode;
   className?: string;
-  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'form';
+  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "full" | "form";
 }
 
 const Container: React.FC<ContainerProps> = ({
   children,
-  className = '',
-  maxWidth = 'xl',
+  className = "",
+  maxWidth = "xl",
 }) => {
   const maxWidthClasses = {
-    sm: 'max-w-sm',
-    md: 'max-w-md',
-    lg: 'max-w-lg',
-    xl: 'max-w-7xl',
-    '2xl': 'max-w-8xl',
-    full: 'max-w-full',
-    form: 'max-w-2xl',
+    sm: "max-w-sm",
+    md: "max-w-md",
+    lg: "max-w-lg",
+    xl: "max-w-7xl",
+    "2xl": "max-w-8xl",
+    full: "max-w-full",
+    form: "max-w-2xl",
   };
 
   return (

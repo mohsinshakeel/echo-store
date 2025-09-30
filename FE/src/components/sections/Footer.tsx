@@ -1,8 +1,17 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Container } from '@/components/common';
-import { Droplets, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Container } from "@/components/common";
+import {
+  Droplets,
+  Mail,
+  Phone,
+  MapPin,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+} from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -24,15 +33,15 @@ const Footer = () => {
                 <span className="text-2xl font-bold">EcoBottle</span>
               </div>
               <p className="text-gray-300 mb-6 leading-relaxed">
-                Leading the way in sustainable hydration solutions. 
-                Every bottle makes a difference for our planet.
+                Leading the way in sustainable hydration solutions. Every bottle
+                makes a difference for our planet.
               </p>
               <div className="flex gap-4">
                 {[
-                  { icon: Facebook, href: '#' },
-                  { icon: Twitter, href: '#' },
-                  { icon: Instagram, href: '#' },
-                  { icon: Linkedin, href: '#' },
+                  { icon: Facebook, href: "#" },
+                  { icon: Twitter, href: "#" },
+                  { icon: Instagram, href: "#" },
+                  { icon: Linkedin, href: "#" },
                 ].map((social, index) => (
                   <motion.a
                     key={index}
@@ -57,12 +66,12 @@ const Footer = () => {
               <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-3">
                 {[
-                  'About Us',
-                  'Our Products',
-                  'Sustainability',
-                  'Reviews',
-                  'Blog',
-                  'Careers',
+                  "About Us",
+                  "Our Products",
+                  "Sustainability",
+                  "Reviews",
+                  "Blog",
+                  "Careers",
                 ].map((link, index) => (
                   <li key={index}>
                     <a
@@ -86,12 +95,12 @@ const Footer = () => {
               <h3 className="text-lg font-semibold mb-4">Customer Service</h3>
               <ul className="space-y-3">
                 {[
-                  'Contact Us',
-                  'Shipping Info',
-                  'Returns',
-                  'Warranty',
-                  'FAQ',
-                  'Size Guide',
+                  "Contact Us",
+                  "Shipping Info",
+                  "Returns",
+                  "Warranty",
+                  "FAQ",
+                  "Size Guide",
                 ].map((link, index) => (
                   <li key={index}>
                     <a
@@ -125,7 +134,8 @@ const Footer = () => {
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-green-400 mt-1" />
                   <span className="text-gray-300">
-                    123 Eco Street<br />
+                    123 Eco Street
+                    <br />
                     Green City, GC 12345
                   </span>
                 </div>
@@ -147,13 +157,22 @@ const Footer = () => {
               © {currentYear} EcoBottle. All rights reserved.
             </p>
             <div className="flex gap-6 text-sm">
-              <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-green-400 transition-colors"
+              >
                 Privacy Policy
               </a>
-              <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-green-400 transition-colors"
+              >
                 Terms of Service
               </a>
-              <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-green-400 transition-colors"
+              >
                 Cookie Policy
               </a>
             </div>

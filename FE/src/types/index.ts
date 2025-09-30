@@ -12,7 +12,7 @@ export interface ContactFormData {
   email: string;
   phone: string;
   message: string;
-  interest: 'product' | 'partnership' | 'general';
+  interest: "product" | "partnership" | "general";
 }
 
 export interface LoginFormData {
@@ -51,12 +51,12 @@ export interface User {
 
 export interface ButtonProps {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "secondary" | "outline" | "ghost";
+  size?: "sm" | "md" | "lg";
   className?: string;
   onClick?: () => void;
   disabled?: boolean;
-  type?: 'button' | 'submit' | 'reset';
+  type?: "button" | "submit" | "reset";
 }
 
 export interface InputProps {

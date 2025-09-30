@@ -1,19 +1,24 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Card } from '@/components/common';
-import { Product } from '@/types';
-import { formatPrice } from '@/lib/utils';
-import { Heart, Star, Leaf } from 'lucide-react';
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { Card } from "@/components/common";
+import { Product } from "@/types";
+import { formatPrice } from "@/lib/utils";
+import { Heart, Star, Leaf } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
   index: number;
-  viewMode?: 'grid' | 'list';
+  viewMode?: "grid" | "list";
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, index, viewMode = 'grid' }) => {
-  if (viewMode === 'list') {
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  index,
+  viewMode = "grid",
+}) => {
+  if (viewMode === "list") {
     return (
       <motion.div
         initial={{ opacity: 0, x: -50 }}
@@ -31,9 +36,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, viewMode = 'g
                   transition={{ duration: 0.3 }}
                 >
                   {product.image_url ? (
-                    <img 
-                      src={product.image_url} 
+                    <Image
+                      src={product.image_url}
                       alt={product.title}
+                      width={160}
+                      height={128}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -42,7 +49,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, viewMode = 'g
                     </div>
                   )}
                 </motion.div>
-                
+
                 {/* Eco Badge */}
                 <div className="absolute top-2 left-2">
                   <motion.div
@@ -70,7 +77,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, viewMode = 'g
               <div>
                 <div className="flex items-center gap-1 mb-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                    <Star
+                      key={i}
+                      className="w-3 h-3 fill-yellow-400 text-yellow-400"
+                    />
                   ))}
                   <span className="text-xs text-gray-500 ml-1">(4.8)</span>
                 </div>
@@ -108,9 +118,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, viewMode = 'g
               transition={{ duration: 0.3 }}
             >
               {product.image_url ? (
-                <img 
-                  src={product.image_url} 
+                <Image
+                  src={product.image_url}
                   alt={product.title}
+                  width={400}
+                  height={192}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -119,7 +131,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, viewMode = 'g
                 </div>
               )}
             </motion.div>
-            
+
             {/* Eco Badge */}
             <div className="absolute top-3 left-3">
               <motion.div
@@ -145,7 +157,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, viewMode = 'g
           <div className="p-6">
             <div className="flex items-center gap-1 mb-2">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                <Star
+                  key={i}
+                  className="w-4 h-4 fill-yellow-400 text-yellow-400"
+                />
               ))}
               <span className="text-sm text-gray-500 ml-1">(4.8)</span>
             </div>

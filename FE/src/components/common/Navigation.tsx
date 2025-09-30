@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '@/lib/auth-context';
-import Button from './Button';
-import { Droplets, Menu, X, User, LogOut, Package } from 'lucide-react';
+import { useState } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/lib/auth-context";
+import Button from "./Button";
+import { Droplets, Menu, X, User, LogOut } from "lucide-react";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,7 +30,7 @@ const Navigation = () => {
           <Link href="/" className="flex items-center gap-2">
             <motion.div
               whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
               <Droplets className="w-8 h-8 text-green-600 dark:text-green-400" />
             </motion.div>
@@ -69,7 +69,6 @@ const Navigation = () => {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-4">
-
             {isAuthenticated ? (
               <div className="relative">
                 <button
@@ -108,9 +107,7 @@ const Navigation = () => {
                   </Button>
                 </Link>
                 <Link href="/auth/signup">
-                  <Button size="sm">
-                    Sign Up
-                  </Button>
+                  <Button size="sm">Sign Up</Button>
                 </Link>
               </>
             )}
@@ -121,7 +118,11 @@ const Navigation = () => {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors"
           >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
 
@@ -131,7 +132,7 @@ const Navigation = () => {
             <motion.div
               className="md:hidden border-t border-gray-200 dark:border-gray-700 py-4"
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
@@ -197,9 +198,7 @@ const Navigation = () => {
                         className="block w-full"
                         onClick={() => setIsMenuOpen(false)}
                       >
-                        <Button className="w-full">
-                          Sign Up
-                        </Button>
+                        <Button className="w-full">Sign Up</Button>
                       </Link>
                     </div>
                   )}

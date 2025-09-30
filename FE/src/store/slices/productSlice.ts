@@ -1,5 +1,10 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { productService, Product, CreateProductData, UpdateProductData } from '../../services/productService';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import {
+  productService,
+  Product,
+  CreateProductData,
+  UpdateProductData,
+} from "../../services/productService";
 
 interface ProductState {
   products: Product[];
@@ -22,74 +27,95 @@ const initialState: ProductState = {
   isCreating: false,
   isUpdating: false,
   isDeleting: false,
-    totalPages: 1,
+  totalPages: 1,
   currentPage: 1,
   totalProducts: 0,
 };
 
 // Async thunks
 export const createProduct = createAsyncThunk(
-  'product/createProduct',
+  "product/createProduct",
   async (data: CreateProductData, { rejectWithValue }) => {
     try {
       const response = await productService.createProduct(data);
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to create product');
+    } catch (error: unknown) {
+      return rejectWithValue(
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Failed to create product",
+      );
     }
-  }
+  },
 );
 
 export const getProduct = createAsyncThunk(
-  'product/getProduct',
+  "product/getProduct",
   async (id: string, { rejectWithValue }) => {
     try {
       const response = await productService.getProduct(id);
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch product');
+    } catch (error: unknown) {
+      return rejectWithValue(
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Failed to fetch product",
+      );
     }
-  }
+  },
 );
 
 export const getProducts = createAsyncThunk(
-  'product/getProducts',
-  async ({ limit, page }: { limit?: number; page?: number }, { rejectWithValue }) => {
+  "product/getProducts",
+  async (
+    { limit, page }: { limit?: number; page?: number },
+    { rejectWithValue },
+  ) => {
     try {
       const response = await productService.getProducts(limit, page);
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch products');
+    } catch (error: unknown) {
+      return rejectWithValue(
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Failed to fetch products",
+      );
     }
-  }
+  },
 );
 
 export const updateProduct = createAsyncThunk(
-  'product/updateProduct',
-  async ({ id, data }: { id: string; data: UpdateProductData }, { rejectWithValue }) => {
+  "product/updateProduct",
+  async (
+    { id, data }: { id: string; data: UpdateProductData },
+    { rejectWithValue },
+  ) => {
     try {
       const response = await productService.updateProduct(id, data);
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to update product');
+    } catch (error: unknown) {
+      return rejectWithValue(
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Failed to update product",
+      );
     }
-  }
+  },
 );
 
 export const deleteProduct = createAsyncThunk(
-  'product/deleteProduct',
+  "product/deleteProduct",
   async (id: string, { rejectWithValue }) => {
     try {
       await productService.deleteProduct(id);
       return id;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to delete product');
+    } catch (error: unknown) {
+      return rejectWithValue(
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Failed to delete product",
+      );
     }
-  }
+  },
 );
 
 const productSlice = createSlice({
-  name: 'product',
+  name: "product",
   initialState,
   reducers: {
     clearError: (state) => {
@@ -122,7 +148,7 @@ const productSlice = createSlice({
         state.isCreating = false;
         state.error = action.payload as string;
       })
-      
+
       // Get Product
       .addCase(getProduct.pending, (state) => {
         state.isLoading = true;
@@ -137,7 +163,7 @@ const productSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
-      
+
       // Get Products
       .addCase(getProducts.pending, (state) => {
         state.isLoading = true;
@@ -155,7 +181,7 @@ const productSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
-      
+
       // Update Product
       .addCase(updateProduct.pending, (state) => {
         state.isUpdating = true;
@@ -163,7 +189,9 @@ const productSlice = createSlice({
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.isUpdating = false;
-        const index = state.products.findIndex(product => product.id === action.payload.id);
+        const index = state.products.findIndex(
+          (product) => product.id === action.payload.id,
+        );
         if (index !== -1) {
           state.products[index] = action.payload;
         }
@@ -174,7 +202,7 @@ const productSlice = createSlice({
         state.isUpdating = false;
         state.error = action.payload as string;
       })
-      
+
       // Delete Product
       .addCase(deleteProduct.pending, (state) => {
         state.isDeleting = true;
@@ -182,7 +210,9 @@ const productSlice = createSlice({
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.isDeleting = false;
-        state.products = state.products.filter(product => product.id !== action.payload);
+        state.products = state.products.filter(
+          (product) => product.id !== action.payload,
+        );
         if (state.currentProduct?.id === action.payload) {
           state.currentProduct = null;
         }
@@ -195,5 +225,10 @@ const productSlice = createSlice({
   },
 });
 
-export const { clearError, clearCurrentProduct, setCurrentProduct, clearProducts } = productSlice.actions;
+export const {
+  clearError,
+  clearCurrentProduct,
+  setCurrentProduct,
+  clearProducts,
+} = productSlice.actions;
 export default productSlice.reducer;

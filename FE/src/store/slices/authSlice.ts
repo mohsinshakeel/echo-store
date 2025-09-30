@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { authService, SignupData, LoginData, AuthResponse } from '../../services/authService';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { authService, SignupData, LoginData } from "../../services/authService";
 
 interface User {
   id: string;
@@ -20,10 +20,10 @@ interface AuthState {
 
 // Initialize state from localStorage
 const getInitialState = (): AuthState => {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     const { access_token, refresh_token } = authService.getTokens();
     const user = authService.getUser();
-    
+
     return {
       user: user,
       access_token: access_token,
@@ -34,7 +34,7 @@ const getInitialState = (): AuthState => {
       isRefreshing: false,
     };
   }
-  
+
   return {
     user: null,
     access_token: null,
@@ -50,77 +50,88 @@ const initialState: AuthState = getInitialState();
 
 // Async thunks
 export const signup = createAsyncThunk(
-  'auth/signup',
+  "auth/signup",
   async (data: SignupData, { rejectWithValue }) => {
     try {
       const response = await authService.signup(data);
       authService.setTokens(response.access_token, response.refresh_token);
       authService.setUser(response.user);
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Signup failed');
+    } catch (error: unknown) {
+      return rejectWithValue(
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Signup failed",
+      );
     }
-  }
+  },
 );
 
 export const login = createAsyncThunk(
-  'auth/login',
+  "auth/login",
   async (data: LoginData, { rejectWithValue }) => {
     try {
       const response = await authService.login(data);
       authService.setTokens(response.access_token, response.refresh_token);
       authService.setUser(response.user);
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Login failed');
+    } catch (error: unknown) {
+      return rejectWithValue(
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Login failed",
+      );
     }
-  }
+  },
 );
 
 export const refreshToken = createAsyncThunk(
-  'auth/refreshToken',
+  "auth/refreshToken",
   async (_, { rejectWithValue }) => {
     try {
       const response = await authService.refresh();
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Token refresh failed');
+    } catch (error: unknown) {
+      return rejectWithValue(
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Token refresh failed",
+      );
     }
-  }
+  },
 );
 
 export const logout = createAsyncThunk(
-  'auth/logout',
+  "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
       authService.clearAuth();
       return null;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Logout failed');
+    } catch (error: unknown) {
+      return rejectWithValue(
+        (error as { message?: string }).message || "Logout failed",
+      );
     }
-  }
+  },
 );
 
 export const checkAuth = createAsyncThunk(
-  'auth/checkAuth',
+  "auth/checkAuth",
   async (_, { rejectWithValue, getState }) => {
     try {
       const state = getState() as { auth: AuthState };
       if (state.auth.isLoading || state.auth.isRefreshing) {
         // If already checking auth or refreshing, don't start another check
-        throw new Error('Auth check already in progress');
+        throw new Error("Auth check already in progress");
       }
-      
+
       const { access_token, refresh_token } = authService.getTokens();
       if (!access_token || !refresh_token) {
-        throw new Error('No tokens available');
+        throw new Error("No tokens available");
       }
-      
+
       // Check if access token is expired by trying to decode it
       try {
-        const tokenPayload = JSON.parse(atob(access_token.split('.')[1]));
+        const tokenPayload = JSON.parse(atob(access_token.split(".")[1]));
         const currentTime = Date.now() / 1000;
-        
+
         // If token is still valid (not expired), just return the stored user data
         if (tokenPayload.exp > currentTime) {
           // Token is still valid, no need to refresh
@@ -128,27 +139,26 @@ export const checkAuth = createAsyncThunk(
             access_token,
             refresh_token,
             user: {
-              id: tokenPayload.id || '',
-              name: tokenPayload.name || '',
-              username: tokenPayload.username || '',
-              email: tokenPayload.email || '',
-            }
+              id: tokenPayload.id || "",
+              name: tokenPayload.name || "",
+              username: tokenPayload.username || "",
+              email: tokenPayload.email || "",
+            },
           };
         }
-      } catch (decodeError) {
-      }
-      
+      } catch {}
+
       const response = await authService.refresh();
       return response;
-    } catch (error: any) {
+    } catch {
       authService.clearAuth();
-      return rejectWithValue('Authentication failed');
+      return rejectWithValue("Authentication failed");
     }
-  }
+  },
 );
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     clearError: (state) => {
@@ -179,7 +189,7 @@ const authSlice = createSlice({
         state.error = action.payload as string;
         state.isAuthenticated = false;
       })
-      
+
       // Login
       .addCase(login.pending, (state) => {
         state.isLoading = true;
@@ -198,7 +208,7 @@ const authSlice = createSlice({
         state.error = action.payload as string;
         state.isAuthenticated = false;
       })
-      
+
       // Refresh Token
       .addCase(refreshToken.pending, (state) => {
         state.isRefreshing = true;
@@ -218,7 +228,7 @@ const authSlice = createSlice({
         state.access_token = null;
         state.refresh_token = null;
       })
-      
+
       // Logout
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
@@ -228,7 +238,7 @@ const authSlice = createSlice({
         state.error = null;
         state.isLoading = false;
       })
-      
+
       // Check Auth
       .addCase(checkAuth.pending, (state) => {
         state.isLoading = true;

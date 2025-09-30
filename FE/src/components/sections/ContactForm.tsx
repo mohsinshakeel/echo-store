@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
-import { Button, Input, Card, Container } from '@/components/common';
-import { contactFormSchema, ContactFormData } from '@/lib/validations';
-import { Mail, Phone, User, MessageSquare, CheckCircle } from 'lucide-react';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
+import { Button, Input, Card, Container } from "@/components/common";
+import { contactFormSchema, ContactFormData } from "@/lib/validations";
+import { Mail, Phone, User, MessageSquare, CheckCircle } from "lucide-react";
 
 const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,21 +20,21 @@ const ContactForm = () => {
     reset,
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
-    mode: 'onChange',
+    mode: "onChange",
   });
 
   const watchedFields = watch();
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    console.log('Form submitted:', data);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    console.log("Form submitted:", data);
     setIsSubmitted(true);
     setIsSubmitting(false);
-    
+
     // Reset form after 3 seconds
     setTimeout(() => {
       setIsSubmitted(false);
@@ -55,7 +55,7 @@ const ContactForm = () => {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             >
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
             </motion.div>
@@ -63,7 +63,8 @@ const ContactForm = () => {
               Thank You!
             </h3>
             <p className="text-gray-600 dark:text-gray-300">
-              Your message has been sent successfully. We'll get back to you soon!
+              Your message has been sent successfully. We&apos;ll get back to
+              you soon!
             </p>
           </Card>
         </motion.div>
@@ -84,7 +85,8 @@ const ContactForm = () => {
           Get in Touch
         </h2>
         <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          Have questions about our eco-friendly water bottles? We'd love to hear from you!
+          Have questions about our eco-friendly water bottles? We&apos;d love to
+          hear from you!
         </p>
       </motion.div>
 
@@ -100,18 +102,18 @@ const ContactForm = () => {
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <Input
-                  {...register('name')}
+                  {...register("name")}
                   label="Full Name"
                   placeholder="Enter your full name"
                   error={errors.name?.message}
                   className="pl-10"
                 />
               </div>
-              
+
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <Input
-                  {...register('email')}
+                  {...register("email")}
                   type="email"
                   label="Email Address"
                   placeholder="Enter your email"
@@ -124,7 +126,7 @@ const ContactForm = () => {
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <Input
-                {...register('phone')}
+                {...register("phone")}
                 type="tel"
                 label="Phone Number"
                 placeholder="Enter your phone number"
@@ -138,7 +140,7 @@ const ContactForm = () => {
                 Area of Interest
               </label>
               <select
-                {...register('interest')}
+                {...register("interest")}
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
               >
                 <option value="">Select an option</option>
@@ -164,7 +166,7 @@ const ContactForm = () => {
                   Message
                 </label>
                 <textarea
-                  {...register('message')}
+                  {...register("message")}
                   rows={5}
                   placeholder="Tell us about your inquiry..."
                   className="w-full px-4 py-3 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 resize-none"
@@ -186,25 +188,27 @@ const ContactForm = () => {
               <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300">
                 <span>Form Progress</span>
                 <span>
-                  {Object.keys(watchedFields).filter(key => watchedFields[key as keyof ContactFormData]).length} / 5
+                  {
+                    Object.keys(watchedFields).filter(
+                      (key) => watchedFields[key as keyof ContactFormData],
+                    ).length
+                  }{" "}
+                  / 5
                 </span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <motion.div
                   className="bg-green-500 h-2 rounded-full"
                   initial={{ width: 0 }}
-                  animate={{ 
-                    width: `${(Object.keys(watchedFields).filter(key => watchedFields[key as keyof ContactFormData]).length / 5) * 100}%` 
+                  animate={{
+                    width: `${(Object.keys(watchedFields).filter((key) => watchedFields[key as keyof ContactFormData]).length / 5) * 100}%`,
                   }}
                   transition={{ duration: 0.3 }}
                 />
               </div>
             </div>
 
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Button
                 type="submit"
                 size="lg"
@@ -215,13 +219,17 @@ const ContactForm = () => {
                   <motion.div
                     className="flex items-center justify-center"
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
                   >
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2" />
                     Sending...
                   </motion.div>
                 ) : (
-                  'Send Message'
+                  "Send Message"
                 )}
               </Button>
             </motion.div>
